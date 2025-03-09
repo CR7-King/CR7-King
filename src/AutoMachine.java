@@ -30,6 +30,7 @@ public class AutoMachine {
         balance = money + balance;
         if (balance > 0) {
             System.out.println("当前余额为：" + (balance - totalPrice));
+            balance = balance - totalPrice;
             System.out.println("是否继续购买？1：是 2：否");
             int x = scanner.nextInt();
             if (x == 1) {
@@ -85,23 +86,5 @@ public class AutoMachine {
         System.out.println("请选择商品：1美年达 2可口可乐 3旺仔牛奶 4百事可乐 5雪碧");
     }
 
-    // 售货机判定客户是否购买商品
-    public void isBye(int decide) {
-        if (decide == 1) {
-            System.out.println(balance);
-            if (balance == 0) {
-                System.out.println("请投入货币：");
-                balance(scanner.nextDouble());
-            } else if (balance < totalPrice) {
-                System.out.println("金额不足，请补充货币：");
-                balance(scanner.nextDouble());
-            } else {
-                // balance = balance - totalPrice;
-                // System.out.println(balance);
-            }
-        } else {
-            System.out.println("交易取消！找您" + balance + "元!");
-            System.out.println("欢迎下次光临！");
-        }
-    }
+
 }
