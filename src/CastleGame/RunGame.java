@@ -1,33 +1,53 @@
 package CastleGame;
 
+import java.util.HashMap;
+import java.util.Scanner;
+
 public class RunGame {
 
     private Room room;
+    private HashMap<String, Handle> handles = new HashMap<String, Handle>();
 
     RunGame() {
         initGame();
+        handles.put("help", new HandleHelp(this));
+        handles.put("go", new HandleGo(this));
+        handles.put("bye", new HandleBye(this));
     }
+
 
     private void initGame() {
 
         //创建房间
-        Room study, outside, bedroom, bar, shop, lobby;
+        Room study, outside, bedroom, bar, shop, lobby, wc;
         outside = new Room("城堡外");
         lobby = new Room("大厅");
         study = new Room("书房");
         bar = new Room("酒吧");
         shop = new Room("商店");
         bedroom = new Room("卧室");
+        wc = new Room("厕所");
 
         room = outside;
 
         //east 右
-        outside.setRoomExits(null, lobby, bar, null);
-        bar.setRoomExits(null, shop, null, outside);
-        lobby.setRoomExits(outside, study, shop, null);
-        shop.setRoomExits(bar, bedroom, null, lobby);
-        study.setRoomExits(lobby, null, bedroom, null);
-        bedroom.setRoomExits(shop, null, null, study);
+        outside.setRoomExits("east", bar);
+        outside.setRoomExits("south", lobby);
+        lobby.setRoomExits("east", shop);
+        lobby.setRoomExits("north", outside);
+        lobby.setRoomExits("south", study);
+        shop.setRoomExits("north", bar);
+        shop.setRoomExits("west", lobby);
+        shop.setRoomExits("south", bedroom);
+        bar.setRoomExits("sorth", shop);
+        bar.setRoomExits("west", outside);
+        study.setRoomExits("east", bedroom);
+        study.setRoomExits("north", lobby);
+        bedroom.setRoomExits("west", study);
+        bedroom.setRoomExits("nouth", shop);
+        lobby.setRoomExits("up", wc);
+        wc.setRoomExits("down", lobby);
+        showWelcome();
     }
 
     public void showWelcome() {
@@ -39,14 +59,30 @@ public class RunGame {
         System.out.println(room.getRoomExits());
     }
 
-    public void showHelp() {
-        System.out.print("迷路了吗?你可以做的命令有： go bye help");
-        System.out.println("如:\tgo east ");
-    }
 
     public void showRoom(String str) {
-        room = room.getRoomDesc(str, room);
+        room = room.getRoomDesc(str);
     }
+
+    public void play() {
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            String s = scanner.nextLine();
+            String[] str = s.split(" ");
+            Handle handle = handles.get(str[0]);
+            String cmd = "";
+            if (str.length > 1)
+                cmd = str[1];
+            if (handle != null) {
+                handle.doCmd(cmd);
+                if (handle.isBye()) {
+                    break;
+                }
+            }
+        }
+        System.out.println("游戏结束！");
+    }
+
 }
 
 
