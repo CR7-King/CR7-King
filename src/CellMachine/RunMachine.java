@@ -6,7 +6,7 @@ import javax.swing.JFrame;
 public class RunMachine {
 
     public static void main(String[] args) {
-        Field field = new Field(30, 30);
+        Field field = new Field(60, 60);
         for (int row = 0; row < field.getHeight(); row++) {
             for (int col = 0; col < field.getWidth(); col++) {
                 field.place(row, col, new Cell());
